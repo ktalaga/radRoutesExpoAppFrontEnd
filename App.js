@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, View, Text, Dimensions} from 'react-native';
+import {Button, Text, SafeAreaView, StyleSheet, Modal, 
+  View, Dimensions, TextInput  } from "react-native";
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import Map2 from './components/parkComponents/Map2';
@@ -11,6 +12,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Request from './helpers/Request';
 import {useState, useEffect} from 'react';
+// import { Button, Overlay} from 'react-native-elements';
 
 export default function App() {
 
@@ -40,6 +42,10 @@ export default function App() {
     latitudeDelta: 0.09,
     longitudeDelta: 0.04
   });
+  const [inputValue, setInputValue] = useState("");
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
 
   // useEffect(() => {
   //   setLatitude(4.1246)
@@ -65,6 +71,10 @@ export default function App() {
 
   const onValueChange= function(park){
     setSelectedValue(park)}
+
+    const toggleModalVisibility = () => {
+      setModalVisible(!isModalVisible);
+  };
 
 
   
@@ -135,12 +145,44 @@ export default function App() {
     }, [users.values])
   
   return (
+    
+
     <NavigationContainer>
+
+    <SafeAreaView style={styles.screen}>
+          <StatusBar style="auto" />
+          
+          <Button title="login" onPress={toggleModalVisibility}/>
+            <Modal animationType="slide" 
+                   transparent visible={isModalVisible} 
+                   presentationStyle="overFullScreen" 
+                   onDismiss={toggleModalVisibility}>
+                <View style={styles.viewWrapper}>
+                    <View style={styles.modalView}>
+                        <Text>Your username</Text>
+                        <TextInput placeholder="Enter something..." 
+                                   value={username} style={styles.textInput} 
+                                   onChangeText={(value) => setInputValue(value)} />
+                        <Text>Your Email</Text>
+                        <TextInput placeholder="Enter something..." 
+                                   value={email} style={styles.textInput} 
+                                   onChangeText={(value) => setInputValue(value)} />
+                        <Button title='Login'/> 
+                        </View>
+                        <View>
+                        <Button title="Close" onPress={toggleModalVisibility} />
+                        </View>
+                    
+                        
+                </View>
+            </Modal>
+        </SafeAreaView>
+
       <Tab.Navigator
         shifting={false}
         activeColor="#EFDECD"
         inactiveColor="#F0F8FF"
-        barStyle={{ backgroundColor: "#228B22"	 }}
+        barStyle={{ backgroundColor: "#228B22" }}
       >
     <Tab.Screen name="My Profile" component={MyProfile} options={{
           tabBarLabel: 'My Profile',
@@ -174,10 +216,35 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  screen: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "#fff",
+      borderRadius: 0,
+  },
+  viewWrapper: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.2)",
+      borderRadius: 0,
+  },
+  modalView: {
+      alignItems: "center",
+      justifyContent: "center",
+      height: 400,
+      width: '80%',
+      backgroundColor: "#fff",
+      borderRadius: 1,
+  },
+  textInput: {
+      width: "80%",
+      borderRadius: 5,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      borderColor: "rgba(0, 0, 0, 0.2)",
+      borderWidth: 1,
+      marginBottom: 8,
   },
 });
