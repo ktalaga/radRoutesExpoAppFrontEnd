@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, View, Text, Dimensions, ImageBackground} from 'react-native';
+import {StyleSheet, View, Text, Dimensions, ImageBackground, Image} from 'react-native';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import Map2 from './components/parkComponents/Map2';
@@ -21,6 +21,8 @@ export default function App() {
   const [users, setUsers] = useState([]);
   const [coordinates, setCoordinates] = useState([]);
   const [selectedValue, setSelectedValue] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [region, setRegion] = useState({
     latitude: 57.88,
@@ -44,37 +46,83 @@ export default function App() {
   const onValueChange= function(park){
     setSelectedValue(park)}
 
+    const logOut = (() => {
+      setCurrentUser(null)
+      
+    })
+
+    const distanceCovered = () =>{
+      let total = 0;
+      for (let i = 0; i < 10; i++) {
+          total += currentUser.allRoutes[i].distance;
+
+
+      }
+      return total;
+
+  }
+    
+    
+
   function MyProfile() {
     return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <UserContainer/>
-    </View>
+
+      <ImageBackground source={require('./assets/RRback.jpeg')} style={styles.image}>
+
+        <Text style={styles.header}>               RadRoutes</Text>
+         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+         <UserContainer  distanceCovered={distanceCovered} setSelectedUser={setSelectedUser} selectedUser={selectedUser} users={users} currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+        </View>
+      </ImageBackground>
+
     );
     }
     
     function Parks() {
     return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+
+      <ImageBackground source={require('./assets/RRback.jpeg')} style={styles.image}>
+        <Text style={styles.header}>               RadRoutes</Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ParkContainer parks={parks} onValueChange={onValueChange} selectedValue={selectedValue}/>
         <Map parks={parks} region={region} setRegion={setRegion} coordinates={coordinates}
         lochLomand={lochLomand} setLochLomand={setLochLomand} cairngorms={cairngorms} setCairngorms={setCairngorms} selectedValue={selectedValue}
         routes={routes}
         />
     </View>
+      </ImageBackground>
+    
     );
     }
     
     function AllRoutes() {
-        return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Routes routes={routes}/>
-        </View>
-        );
-        }
-    
+
+      console.log(routes.length)
+
+      if (routes.length === 0){
+        return null;
+      }
+return (
+          <ImageBackground source={require('./assets/RRback.jpeg')} style={styles.image}>
+
+            
+          <Text style={styles.header}>               RadRoutes</Text>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+
+          <Routes routes={routes}/>
+      </View>
+        </ImageBackground>
+        )
+}
+
     function LogOut() {
         return (
-          <LogIn/>
+
+          <ImageBackground source={require('./assets/RRback.jpeg')} style={styles.image}>
+            <Text style={styles.header}>               RadRoutes</Text>
+            <LogIn logOut={logOut} currentUser={currentUser}/>    
+          </ImageBackground>
+          
         );
         }
     
@@ -160,7 +208,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    marginHorizontal: 16
   },
+  image: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    
+  },
+  header: {
+    alignItems: 'center',
+    fontSize: 32,
+    backgroundColor: "#228B22",
+    color: '#fff'
+},
+ 
  
 });
 

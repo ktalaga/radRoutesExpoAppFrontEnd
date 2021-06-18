@@ -1,29 +1,52 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {StyleSheet, View, Text, TextComponent, Image} from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
+import DistanceCovered from '../userComponents/DistanceCovered';
 
 
-const User = () => {
+const User = ({users, selectedUser, setSelectedUser, currentUser, setCurrentUser}) => {
 
-    const styles = StyleSheet.create({
+    const onValueChange= function(user){
+        
+        findUser(user, users)
+       
+    
+    }
 
-    logo: {
-        width: 66,
-        height: 58,
-    },
+    const findUser = function(user, users){
+        for (var i=0; i < users.length; i++) {
+            if (users[i].alias === user) {
+                setCurrentUser(users[i]);
+            }
+        }
+    }
+
+    console.log(`currentUser`, currentUser)
+
+    
+
+const listOfUserPickerItems = users.map((user, id) => {
+        return (
+            {label: user.alias, value: user.alias, key: id}
+            
+        );
     });
 
+   
 
     return(
-        <View>
-                <Text>This is User Profile component</Text>
+        <Fragment>
+                <RNPickerSelect
+            onValueChange={onValueChange}
+            items={
+                listOfUserPickerItems
+            }
+        />
 
-                <Image
-                    style={styles.logo}
-                    source={{
-                    uri: 'https://www.balticcouncil.pl/images/products/macibas-arzemes/valodu-nometnes-kursi-7-18-g-v-skoleniem---individualie-braucieni/anglu-valoda-asv/boston/th/700x700_6/1.jpg',
-                    }}
-                />
-        </View>
+        
+        </Fragment>
+    
+       
     )
 }
 

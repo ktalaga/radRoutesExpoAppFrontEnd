@@ -1,14 +1,29 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-const RouteList = () => {
+const RouteList = ({currentUser}) => {
     
-    return (
-        <View>
-            <Text>This is Route List component</Text>
-        </View>
-    );
+    if (currentUser === null){
+        return (null)
+    }
 
-}
+ return (
+    
+            
+            <View>
+                
+                
+            </View>
+    
+    
+        )
+    
+    
+      
+       
+    
+    }
+
+
 
 export default RouteList;
